@@ -35,12 +35,31 @@ public class AuthenticationService {
             throw new RuntimeException("Given user email is already exist! Email: "+email);
         }
         String encodedPassword = passwordEncoder.encode(password);
-        Roles userRole = roleRepository.findByAuthority("USER").get();
-        //Roles adminRole = roleRepository.findByAuthority("ADMIN").get();
+        //Roles userRole = roleRepository.findByAuthority("USER").get();
+
 
         Set<Roles> rolesSet = new HashSet<>();
-        rolesSet.add(userRole);
-        //rolesSet.add(adminRole);
+
+    /*   Optional<Roles> adminRole = roleRepository.findByAuthority("ADMIN");
+       if(!adminRole.isPresent()){
+           Roles adminRoleEntity = new Roles();
+           adminRoleEntity.setAuthority("ADMIN");
+           rolesSet.add(roleRepository.save(adminRoleEntity));
+       }else {
+           rolesSet.add(adminRole.get());
+       }*/
+        Optional<Roles> userRole = roleRepository.findByAuthority("USER");
+        if(!userRole.isPresent()){
+            Roles userRoleEntity = new Roles();
+            userRoleEntity.setAuthority("USER");
+            rolesSet.add(roleRepository.save(userRoleEntity));
+        }else {
+            rolesSet.add(userRole.get());
+        }
+
+
+
+
 
         Member member = new Member();
         member.setEmail(email);
